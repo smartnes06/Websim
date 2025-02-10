@@ -95,7 +95,7 @@ if st.button("Analyser nettstedet"):
         y = click_data[:, 1]
 
         fig, ax = plt.subplots(figsize=(8, 6))
-        sns.kdeplot(x, y, cmap="coolwarm", shade=True, bw_adjust=0.5, ax=ax)
+        sns.kdeplot(x=x, y=y, cmap="coolwarm", fill=True, bw_adjust=0.5, ax=ax)
         ax.set_title("Brukerinteraksjon Heatmap")
         ax.set_xlabel("Sidebredde")
         ax.set_ylabel("Sidehøyde")

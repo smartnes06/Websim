@@ -2,9 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import openai
 import os
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -89,17 +86,5 @@ if st.button("Analyser nettstedet"):
         interaction_results = simulate_user_interaction(website_data, persona_selection)
         st.subheader("KI-genererte innsikter")
         st.write(interaction_results)
-        
-        click_data = np.random.randint(0, 100, (100, 2))
-        x = click_data[:, 0]
-        y = click_data[:, 1]
-
-        fig, ax = plt.subplots(figsize=(8, 6))
-        sns.kdeplot(x=x, y=y, cmap="coolwarm", fill=True, bw_adjust=0.5, ax=ax)
-        ax.set_title("Brukerinteraksjon Heatmap")
-        ax.set_xlabel("Sidebredde")
-        ax.set_ylabel("Sidehøyde")
-
-        st.pyplot(fig)
     else:
         st.error("Vennligst skriv inn en gyldig URL.")

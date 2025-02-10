@@ -1,4 +1,6 @@
 numpy
+matplotlib
+seaborn
 streamlit
 beautifulsoup4
 requests

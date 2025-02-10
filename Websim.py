@@ -52,9 +52,9 @@ def simulate_user_interaction(website_data, persona):
 
 Svar på en strukturert format:
 **Bruker Opplevelse Innsikt:**
-- [Mest klikker elementer]
+- [Mest klikket elementer]
 - [Mest ignorerte områder]
-- [Vanligste forvirrelse områder]
+- [Vanligste forvirrelser og frustrasjoner]
 
 **Konvertering Optimalisering Forslag:**
 - [Spesifikke nettside forbedringer]

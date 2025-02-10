@@ -37,26 +37,29 @@ def simulate_user_interaction(website_data, persona):
     client = OpenAI(api_key=OPENAI_API_KEY)
 
     prompt = f"""
-    Du er en AI som simulerer hvordan en {persona} bruker vil samhandle med nettstedet.
-
+    Du er en KI som simulerer {persona} brukere samhandling med et nettsted. 
+    
     Nettstedstittel: {website_data['title']}
     Overskrifter: {', '.join(website_data['headings'])}
     Lenker: {', '.join(website_data['links'])}
     Knapper: {', '.join(website_data['buttons'])}
-
-    Beskriv brukerens reise, hva de klikker på, hvor de kan møte utfordringer, og foreslå forbedringer.
+    
+    Simuler 100 brukere som samhandler med nettsiden.  
+    Tildeldiggjør atferd: noen scroller, andre klikker knapper, noen forlater tidlig.  
+    Gi en oppsummering av **mønstre** (hvilke områder som får mest oppmerksomhet).  
+    Gi annbefalinger for forbedring av konverteringer basert på resultatene.
     Svar på norsk.
-    Format dine svar som følgende:
 
-    **Bruker Opplevelse:**
-    - (Beskriv hva de gjør steg for steg)
+Svar på en strukturert format:
+**Bruker Opplevelse Innsikt:**
+- [Mest klikker elementer]
+- [Mest ignorerte områder]
+- [Vanligste forvirrelse områder]
 
-    **Pain Points:**
-    - (List hvor de blir forvirret eller frustrert)
+**Konvertering Optimalisering Forslag:**
+- [Spesifikke nettside forbedringer]
+"""
 
-    **Forbedringer:**
-    - (Gi klare forbedringer for nettsiden)
-    """
 
     completion = client.chat.completions.create(
         model="gpt-4o",
@@ -83,5 +86,17 @@ if st.button("Analyser nettstedet"):
         interaction_results = simulate_user_interaction(website_data, persona_selection)
         st.subheader("KI-genererte innsikter")
         st.write(interaction_results)
+        
+        click_data = np.random.randint(0, 100, (100, 2))
+        x = click_data[:, 0]
+        y = click_data[:, 1]
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.kdeplot(x, y, cmap="coolwarm", shade=True, bw_adjust=0.5, ax=ax)
+        ax.set_title("Brukerinteraksjon Heatmap")
+        ax.set_xlabel("Sidebredde")
+        ax.set_ylabel("Sidehøyde")
+
+        st.pyplot(fig)
     else:
         st.error("Vennligst skriv inn en gyldig URL.")

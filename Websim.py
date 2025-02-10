@@ -13,12 +13,11 @@ def scrape_website(url):
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
-            return f"Error: Unable to fetch {url}"
+            return f"Feil: Kunne ikke hente {url}"
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extract key elements
-        title = soup.title.string if soup.title else "No Title"
+        title = soup.title.string if soup.title else "Ingen tittel"
         headings = [h.get_text(strip=True) for h in soup.find_all(['h1', 'h2', 'h3'])]
         links = [a['href'] for a in soup.find_all('a', href=True)]
         buttons = [btn.get_text(strip=True) for btn in soup.find_all('button')]
@@ -32,48 +31,39 @@ def scrape_website(url):
     except Exception as e:
         return str(e)
 
-
 def simulate_user_interaction(website_data, persona):
     client = OpenAI(api_key=OPENAI_API_KEY)
 
     prompt = f"""
-    Du er en KI som simulerer {persona} brukere samhandling med et nettsted. 
+    Du er en AI som simulerer hvordan en {persona} bruker vil samhandle med nettstedet.
     
     Nettstedstittel: {website_data['title']}
     Overskrifter: {', '.join(website_data['headings'])}
     Lenker: {', '.join(website_data['links'])}
     Knapper: {', '.join(website_data['buttons'])}
     
-    Simuler 100 brukere som samhandler med nettsiden.  
-    Tildeldiggjør atferd: noen scroller, andre klikker knapper, noen forlater tidlig.  
-    Gi en oppsummering av **mønstre** (hvilke områder som får mest oppmerksomhet).  
-    Gi annbefalinger for forbedring av konverteringer basert på resultatene.
+    Simuler hvordan en typisk {persona} bruker ville navigere nettstedet:
+    - Hva de klikker på først.
+    - Hvor de kan bli forvirret eller miste interesse.
+    - Hvilke områder som fanger mest oppmerksomhet.
+    - Hva kan forbedres for å øke konverteringer.
+    
+    Gi anbefalinger for å forbedre brukeropplevelsen.
     Svar på norsk.
-
-Svar på en strukturert format:
-**Bruker Opplevelse Innsikt:**
-- [Mest klikket elementer]
-- [Mest ignorerte områder]
-- [Vanligste forvirrelser og frustrasjoner]
-
-**Konvertering Optimalisering Forslag:**
-- [Spesifikke nettside forbedringer]
-"""
-
+    """
 
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "Du er en UX og markedsførings ekspert som gir strukturerte nettside analyser."},
+            {"role": "system", "content": "Du er en UX- og markedsføringsekspert som gir strukturerte analyser av nettsteder."},
             {"role": "user", "content": prompt}
         ]
     )
 
     return completion.choices[0].message.content
 
-
-st.title("AI Nettstedsanalytiker")
-st.write("Analyser hvordan forskjellige brukere samhandler med nettsiden din")
+st.title("AI Nettstedssimulator")
+st.write("Analyser hvordan forskjellige brukere samhandler med nettstedet ditt")
 
 url_input = st.text_input("Skriv inn nettstedets URL:")
 persona_selection = st.selectbox("Velg en brukerprofil:", ["Gen Z Shopper", "Travle Profesjonelle", "Tilbudsjeger"])
@@ -84,7 +74,7 @@ if st.button("Analyser nettstedet"):
         website_data = scrape_website(url_input)
         st.write("Simulerer brukeropplevelse...")
         interaction_results = simulate_user_interaction(website_data, persona_selection)
-        st.subheader("KI-genererte innsikter")
+        st.subheader("AI-genererte innsikter")
         st.write(interaction_results)
     else:
         st.error("Vennligst skriv inn en gyldig URL.")

@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import openai
 import os
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv

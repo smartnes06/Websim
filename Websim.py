@@ -37,30 +37,31 @@ def simulate_user_interaction(website_data, persona):
     client = OpenAI(api_key=OPENAI_API_KEY)
 
     prompt = f"""
-    You are an AI simulating a {persona} interacting with a website.
+    Du er en AI som simulerer hvordan en {persona} bruker vil samhandle med nettstedet.
 
-    Website Title: {website_data['title']}
-    Headings: {', '.join(website_data['headings'])}
-    Links: {', '.join(website_data['links'])}
-    Buttons: {', '.join(website_data['buttons'])}
+    Nettstedstittel: {website_data['title']}
+    Overskrifter: {', '.join(website_data['headings'])}
+    Lenker: {', '.join(website_data['links'])}
+    Knapper: {', '.join(website_data['buttons'])}
 
-    Describe the user's journey, what they click on, where they might struggle, and suggest improvements.
-    Format your response as follows:
+    Beskriv brukerens reise, hva de klikker på, hvor de kan møte utfordringer, og foreslå forbedringer.
+    Svar på norsk.
+    Format dine svar som følgende:
 
-    **User Behavior:**
-    - (Describe what they do step by step)
+    **Bruker Opplevelse:**
+    - (Beskriv hva de gjør steg for steg)
 
     **Pain Points:**
-    - (List where they get confused or frustrated)
+    - (List hvor de blir forvirret eller frustrert)
 
-    **Actionable Recommendations:**
-    - (Provide clear improvements for the website)
+    **Forbedringer:**
+    - (Gi klare forbedringer for nettsiden)
     """
 
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You are a UX and marketing expert providing structured website analysis."},
+            {"role": "system", "content": "Du er en UX og markedsførings ekspert som gir strukturerte nettside analyser."},
             {"role": "user", "content": prompt}
         ]
     )
@@ -68,19 +69,19 @@ def simulate_user_interaction(website_data, persona):
     return completion.choices[0].message.content
 
 
-st.title("Website AI Simulator")
-st.write("Analyze how different personas interact with your website")
+st.title("AI Nettstedsanalytiker")
+st.write("Analyser hvordan forskjellige brukere samhandler med nettsiden din")
 
-url_input = st.text_input("Enter Website URL:")
-persona_selection = st.selectbox("Select a Persona:", ["Gen Z Shopper", "Busy Professional", "Bargain Hunter"])
+url_input = st.text_input("Skriv inn nettstedets URL:")
+persona_selection = st.selectbox("Velg en brukerprofil:", ["Gen Z Shopper", "Travle Profesjonelle", "Tilbudsjeger"])
 
-if st.button("Run Analysis"):
+if st.button("Analyser nettstedet"):
     if url_input:
-        st.write("Scraping website...")
+        st.write("Henter nettstedets data...")
         website_data = scrape_website(url_input)
-        st.write("Simulating user behavior...")
+        st.write("Simulerer brukeropplevelse...")
         interaction_results = simulate_user_interaction(website_data, persona_selection)
-        st.subheader("AI-Generated Insights")
+        st.subheader("KI-genererte innsikter")
         st.write(interaction_results)
     else:
-        st.error("Please enter a valid website URL.")
+        st.error("Vennligst skriv inn en gyldig URL.")
